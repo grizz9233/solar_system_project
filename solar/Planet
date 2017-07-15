@@ -1,0 +1,73 @@
+package solar;
+
+import java.awt.Color;
+import java.awt.Graphics;
+
+import util.GameUtil;
+
+public class Planet extends star{
+	/*
+	 * 运行椭圆轨迹：长轴、短轴、速度、角度
+	 */
+	double longAxis;
+	double shortAxis;
+	double speed;
+	double degree;
+	star center;
+	
+	boolean satillite;
+	
+	public void draw(Graphics g) {
+		super.draw(g);
+		move();
+		if(!satillite) {
+			drawTrace(g);
+		}
+		
+		move();
+	}
+	
+	public void drawTrace(Graphics g) {
+		double oval_X, oval_Y, oval_H, oval_W;
+		
+		oval_W = longAxis*2;
+		oval_H = shortAxis*2;
+		oval_X = center.x+center.pic_width/2-longAxis;
+		oval_Y = center.y+center.pic_height/2-shortAxis;
+		
+		Color c = g.getColor();
+		g.setColor(Color.blue);
+		g.drawOval((int)oval_X, (int)oval_Y, (int)oval_W, (int)oval_H);
+		g.setColor(c);
+	}
+	public void move() {
+		//沿椭圆轨迹飞行
+		x=(center.x+center.pic_width/2)+longAxis*Math.cos(degree)-pic_width/2;
+		y=(center.y+center.pic_height/2)+shortAxis*Math.sin(degree)-pic_height/2;
+		
+		degree+=speed;
+		
+	}
+	
+	public Planet(star center,String imgpath, double longAxis, double shortAxis, 
+			double speed,int pic_width, int pic_height) {
+		this.center = center;
+		this.x=center.x+longAxis;
+		this.y=center.y+shortAxis;
+		this.img=GameUtil.getImage(imgpath);
+		
+		this.pic_height=pic_height;
+		this.pic_width=pic_width;
+		
+		this.longAxis = longAxis;
+		this.shortAxis = shortAxis;
+		this.speed = speed;
+		
+	}
+	public Planet(star center,String imgpath, double longAxis, double shortAxis, 
+			double speed,int pic_width, int pic_height,boolean satillite) {
+		this(center, imgpath, longAxis, shortAxis, speed, pic_width, pic_height);
+		this.satillite=satillite;
+		
+	}
+}
